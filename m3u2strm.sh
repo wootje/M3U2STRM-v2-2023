@@ -157,32 +157,32 @@ if [[ ! $1 == "" && ! $2 == "" ]]; then
 	directory="$2"
 	option= "$3"
 	printf "\n"
-	printf "\e[1;34m Remove backup of strm files... \n"
+	printf "\e[1;34m Remove backup of strm files...  \e[0m\n"
 	printf "\n"
 	backupdirectory="$2 old"
 	rm -rfv "$backupdirectory"
-	printf "\e[1;34m Creating new backup of strm files by renaming directory... \n"
+	printf "\e[1;34m Creating new backup of strm files by renaming directory...  \e[0m\n"
 	printf "\n"
 	mv "$directory" "$backupdirectory"
-	printf "\e[1;34m Creating new directory for strm files... \n"
+	printf "\e[1;34m Creating new directory for strm files...  \e[0m\n"
 	printf "\n"
 	mkdir $directory
 	mkdir "${directory}/movies"
 	mkdir "${directory}/tvshows"
 	printf "\n"
-	printf "\e[1;34m Starting PHP script to generate strm files... \n"
+	printf "\e[1;34m Starting PHP script to generate strm files...  \e[0m\n"
 	printf "\n"
 	start
 	printf "\n"
-	printf "\e[1;34m PHP strm script is finished... \n"
+	printf "\e[1;34m PHP strm script is finished...  \e[0m\n"
 	printf "\n"
-	printf "\e[1;34m Setting correct permissions to strm files... \n"
+	printf "\e[1;34m Setting correct permissions to strm files...  \e[0m\n"
 	chmod 775 -R $directory
 	printf "\n"
-	printf "\e[1;34m All done! \n"
+	printf "\e[1;34m All done!  \e[0m\n"
 	sleep 1
 	printf "\n"
-	printf "\e[1;34m Bye \n"
+	printf "\e[1;34m Bye  \e[0m\n"
 	sleep 1
 	exit
 else
