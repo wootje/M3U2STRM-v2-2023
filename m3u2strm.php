@@ -13,6 +13,7 @@
 // Read the command line parameters and parse them into the $_GET array.
 parse_str(implode('&', array_slice($argv, 1)), $_GET);
 
+
 class converter {
 
 	// converter class constructor.
@@ -184,12 +185,15 @@ class converter {
 
 	// Convert to strm files
 	public function convert_strm ($url, $directory, $name_tag = 'tvg_name') {
+		$moviedirectory = $_GET['directory'] . 'movies';
+		$tvshowdirectory = $_GET['directory'] . 'tvshows';
 		$playlist = $this->parse_m3u($url);
 		foreach ($playlist as $group => $stations) {
 			foreach ($stations as $station) {
 				if ($station['type'] === 'Movie') {
 					$movie = $this->extract_movie_info($station[$name_tag]);
 					$movie_name = !empty($movie['year']) ? sprintf('%s/%s (%s).strm', $this->clean_filename($group), $movie['name'], $movie['year']) : sprintf('%s/%s.strm', $this->clean_filename($group), $movie['name']);
+					$directory = '/var/www/ftp/kodi/movies';
 					$this->create_strm_file($this->absolute_filename($directory, $movie_name), $station['url']);
 				}
 				if ($station['type'] === 'Series') {
@@ -199,6 +203,7 @@ class converter {
 					$series_episod = !empty($series['episode']) ? sprintf('E%s', $series['episode']) : '';
 					$series_filenm = !empty($year) ? sprintf('%s (%s) %s%s', $series['name'], $year, $series_season, $series_episod) : sprintf('%s %s%s', $series['name'], $series_season, $series_episod);
 					$series_folder = !empty($year) ? sprintf('%s/%s (%s)/%s.strm', $this->clean_filename($group), $series['name'], $year, trim($series_filenm)) : sprintf('%s/%s/%s.strm', $this->clean_filename($group), $series['name'], trim($series_filenm));
+					$directory = '/var/www/ftp/kodi/tvshows';
 					$this->create_strm_file($this->absolute_filename($directory, $series_folder), $station['url']);
 				}
 			}

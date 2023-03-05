@@ -1,7 +1,33 @@
 #!/bin/bash
-
+#
+#
+# HOW TO USE
+#
+#
+# cd <this directory> && wget <url to m3u8 file> -O vod.m3u8 && ./m3u2strm.sh vod.m3u8 <output directory> <option>
+#
+# Options:
+# 1 = local file
+# 2 = url to file
+#
+# Set the output directory on line 196 & 206 in the php file to:
+# <your directory>/movies
+# <your directory>/tvshows
+#
+#
+# Example crontab (# crontab -e) that runs every monday at 22:00 hour: 
+# 0 22 * * 1 cd /opt/m3u2strm && wget http://mywebsite.online/mym3u8file -O vod.m3u8 && ./m3u2strm.sh vod.m3u8 /var/www/ftp/kodi 1
+#
+#
+#
 # M3U 2 STRM - v1.0.0 (November 2020)
 # Coded by: ERDesigns - Ernst Reidinga (c) 2020
+#
+# Edited by wootje (Februari 2023):
+# - movies & tvshows in seperate directories
+# - existing strm files are moved to another directory as backup
+#
+#
 
 trap 'printf "\n";stop;exit 1;clear;' 2
 
@@ -29,7 +55,9 @@ banner () {
 	printf "\e[1;34m ╚═╝     ╚═╝╚═════╝  ╚═════╝ ╚══════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝ \e[0m\n"
 	printf "\n"
 	printf "\e[1;34m                .:.:.\e[0m\e[1;94m By Ernst Reidinga - ERDesigns \e[0m\e[1;34m.:.:.\e[0m\n"
-	printf "\n"	
+	printf "\n"
+	printf "\e[1;34m 					edited by wootje \e[0m\n"
+	printf "\n"
 }
 
 menu () {
@@ -39,15 +67,17 @@ menu () {
 	printf "\n"
 	printf "\e[1;34m ------------------------------------------------------------------------------\n"
 	printf "\e[1;34m [\e[0m\e[1;31m99\e[0m\e[1;34m]\e[0m\e[1;31m Exit\e[0m\n"
-
 	# Read selection
 	read -p $'\n\e[1;34m [\e[0m\e[1;91m*\e[0m\e[1;34m] Enter your selection: \e[0m' option
+
 
 	# Read filename / URL
 	if [[ $option == 1 || $option == 01 ]]; then
 		mode="LOCAL"
-		read -p $'\e[1;34m [\e[0m\e[1;91m*\e[0m\e[1;34m] Local M3U filename: \e[0m' filename
-		filename=(${filename[@]//\'/})
+		if [[ $filename == "" ]]; then
+			read -p $'\e[1;34m [\e[0m\e[1;91m*\e[0m\e[1;34m] Local M3U filename: \e[0m' filename
+			filename=(${filename[@]//\'/})
+		fi
 		if [[ ! -e $filename ]]; then
 			printf "\e[1;34m [!]\e[31m File DOES NOT exist!\e[0m\n"
 			sleep 1
@@ -70,7 +100,9 @@ menu () {
 
 	# Read output directory
 	if [[ $option == 1 || $option == 01 || $option == 2 || $option == 02 ]]; then
-		read -p $'\e[1;34m [\e[0m\e[1;91m*\e[0m\e[1;34m] Output directory: \e[0m' directory
+		if [[ $filename == "" ]]; then	
+			read -p $'\e[1;34m [\e[0m\e[1;91m*\e[0m\e[1;34m] Output directory: \e[0m' directory
+		fi
 		if [[ $directory == "" ]]; then
 			printf "\e[1;34m [!]\e[31m Please enter a valid directory!\e[0m\n"
 			clear
@@ -108,8 +140,7 @@ start () {
 	printf "\e[1;34m Please wait while converting the M3U to STRM files. \n"
 	currentdir=$(dirname "$0")
 	php -f "$currentdir/m3u2strm.php" filename=$filename directory=$directory > "$currentdir/log.log"
-	wait
-	printf "\e[1;34m All done! \n"
+#	wait
 }
 
 stop () {
@@ -124,7 +155,36 @@ stop () {
 if [[ ! $1 == "" && ! $2 == "" ]]; then
 	filename="$1"
 	directory="$2"
+	option= "$3"
+	printf "\n"
+	printf "\e[1;34m Remove backup of strm files... \n"
+	printf "\n"
+	backupdirectory="$2 old"
+	rm -rfv "$backupdirectory"
+	printf "\e[1;34m Creating new backup of strm files by renaming directory... \n"
+	printf "\n"
+	mv "$directory" "$backupdirectory"
+	printf "\e[1;34m Creating new directory for strm files... \n"
+	printf "\n"
+	mkdir $directory
+	mkdir "${directory}/movies"
+	mkdir "${directory}/tvshows"
+	printf "\n"
+	printf "\e[1;34m Starting PHP script to generate strm files... \n"
+	printf "\n"
 	start
+	printf "\n"
+	printf "\e[1;34m PHP strm script is finished... \n"
+	printf "\n"
+	printf "\e[1;34m Setting correct permissions to strm files... \n"
+	chmod 775 -R $directory
+	printf "\n"
+	printf "\e[1;34m All done! \n"
+	sleep 1
+	printf "\n"
+	printf "\e[1;34m Bye \n"
+	sleep 1
+	exit
 else
 	clear
 	banner
