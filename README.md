@@ -44,3 +44,10 @@ https://erdesigns.eu/app/freeware/view/10
 
 If you like our work, please like us on facebook: https://fb.me/erdesigns.eu
 Want to buy me a coffee? Send me a mail via the contact form on our website or send a message on FB and i will send my paypal address :)
+
+<br>
+<br>
+<b>Buy me a cup of coffee!</b> 🙂👍 <br>
+https://urlshrt.eu/buycupofcoffee
+<br>
+<br>
