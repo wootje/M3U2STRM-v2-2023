@@ -51,3 +51,6 @@ Want to buy me a coffee? Send me a mail via the contact form on our website or s
 https://urlshrt.eu/buycupofcoffee
 <br>
 <br>
+<img src="https://urlshrt.eu/donateqr"></img>
+<br>
+<br>
