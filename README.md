@@ -54,3 +54,4 @@ https://urlshrt.eu/buycupofcoffee
 <img src="https://urlshrt.eu/donateqr"></img>
 <br>
 <br>
+<img src="https://img.shields.io/github/downloads/wootje/M3U2STRM-v2-2023/total.svg"></img>
